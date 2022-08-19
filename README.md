@@ -1,7 +1,7 @@
-Cloning google keep notes 
+<h1>Cloning google keep notes </h1>
 
-features planned to add :
+<h3>features planned to add : </h3>
 
-  complete UI of google keep
-  SQL based local data base
+  UI and functionality of google keep <br>
+  SQL based local data base <br>
   Firebase for cloud 
