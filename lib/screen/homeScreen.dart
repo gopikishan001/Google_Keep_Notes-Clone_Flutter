@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -19,43 +21,53 @@ class homeScreen extends StatelessWidget {
       key: drawerKey,
       backgroundColor: bgColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              topBarHomeScreen(context, drawerKey),
-              const SizedBox(height: 20),
-              notesViewHome(),
-            ],
-          ),
+        child: Column(
+          children: [
+            GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, "searchScreen");
+                },
+                child: topBarHomeScreen(context, drawerKey)),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height - 70,
+                child: GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: 15,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            mainAxisExtent: 100,
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8),
+                    itemBuilder: (context, index) => notesViewItem("dummy")))
+
+            // const SizedBox(height: 15),
+          ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: cardColor,
+          onPressed: () {
+            Navigator.pushNamed(context, "editNotesScreen");
+          },
+          child: const Icon(Icons.create, color: Colors.white)),
     );
   }
 }
 
-Container notesViewHome() {
-  return Container(child: Text("data")
-      //
-      //     GridView.custom(
-      //   gridDelegate: SliverQuiltedGridDelegate(
-      //     crossAxisCount: 4,
-      //     mainAxisSpacing: 4,
-      //     crossAxisSpacing: 4,
-      //     repeatPattern: QuiltedGridRepeatPattern.inverted,
-      //     pattern: [
-      //       QuiltedGridTile(2, 2),
-      //       QuiltedGridTile(1, 1),
-      //       QuiltedGridTile(1, 1),
-      //       QuiltedGridTile(1, 2),
-      //     ],
-      //   ),
-      //   childrenDelegate: SliverChildBuilderDelegate(
-      //     (context, index) => GridTile(index: index),
-      //   ),
-      // )
-      //
-
-      );
+Container notesViewItem(data) {
+  return Container(
+    padding: EdgeInsets.all(8),
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(width: 1, color: white.withOpacity(0.5))),
+    child: Text(
+      data,
+      style: TextStyle(color: white),
+    ),
+  );
 }
 
 ButtonStyle homeScreenButtonStyle() {

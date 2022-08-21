@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:notes/screen/deletedScreen.dart';
+import 'package:notes/screen/editNotes.dart';
+import 'package:notes/screen/helpScreen.dart';
 import 'package:notes/screen/homeScreen.dart';
 import 'package:notes/screen/drawerScreen.dart';
+import 'package:notes/screen/pinnedScreen.dart';
+import 'package:notes/screen/searchScreen.dart';
+import 'package:notes/screen/settings.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +24,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      routes: {
+        "pinnedScreen": (context) => (pinnedScreen()),
+        "homeScreen": (context) => (homeScreen()),
+        "settingsScreen": (context) => (settingsScreen()),
+        "searchScreen": (context) => (searchScreen()),
+        "editNotesScreen": (context) => (editNotesScreen()),
+        "helpScreen": (context) => (helpScreen()),
+        "deletedScreen": (context) => (deletedScreen()),
+      },
       home: homeScreen(),
     );
   }
