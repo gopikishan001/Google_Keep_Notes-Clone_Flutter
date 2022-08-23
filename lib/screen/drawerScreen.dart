@@ -31,16 +31,16 @@ class drawerScreen extends StatelessWidget {
               height: 20,
               child: Divider(color: white.withOpacity(0.5)),
             ),
-            drawerContainerDesign(
-                context, 1, Icons.lightbulb_outline, "Notes", selectedVal),
+            drawerContainerDesign(context, 1, Icons.lightbulb_outline, "Notes",
+                selectedVal, "homeScreen"),
             drawerContainerDesign(context, 2, Icons.pin_drop_outlined,
-                "Pinned Notes", selectedVal),
-            drawerContainerDesign(
-                context, 3, Icons.delete_outline, "Deleted", selectedVal),
-            drawerContainerDesign(
-                context, 4, Icons.settings, "Settings", selectedVal),
+                "Pinned Notes", selectedVal, "pinnedScreen"),
+            drawerContainerDesign(context, 3, Icons.delete_outline, "Deleted",
+                selectedVal, "deletedScreen"),
+            drawerContainerDesign(context, 4, Icons.settings, "Settings",
+                selectedVal, "settingsScreen"),
             drawerContainerDesign(context, 5, Icons.question_mark,
-                "Help & feedback", selectedVal),
+                "Help & feedback", selectedVal, "helpScreen"),
           ],
         )),
       ),
@@ -48,23 +48,15 @@ class drawerScreen extends StatelessWidget {
   }
 }
 
-Container drawerContainerDesign(context, val, icon, text, selectedVal) {
+Container drawerContainerDesign(context, val, icon, text, selectedVal, screen) {
   return Container(
     height: 45,
     padding: const EdgeInsets.only(right: 20),
     child: TextButton(
       onPressed: () {
-        val == 1
-            ? Navigator.pushNamed(context, "homeScreen")
-            : val == 2
-                ? Navigator.pushNamed(context, "pinnedScreen")
-                : val == 3
-                    ? Navigator.pushNamed(context, "deletedScreen")
-                    : val == 4
-                        ? Navigator.pushNamed(context, "settingsScreen")
-                        : val == 5
-                            ? Navigator.pushNamed(context, "helpScreen")
-                            : SizedBox();
+        val != selectedVal
+            ? Navigator.pushNamed(context, screen)
+            : const SizedBox();
       },
       style: drawerScreenButtonStyle(selectedVal == val ? true : false),
       child: Row(children: [

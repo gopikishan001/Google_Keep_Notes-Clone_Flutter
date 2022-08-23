@@ -3,7 +3,6 @@ import 'package:notes/screen/deletedScreen.dart';
 import 'package:notes/screen/editNotes.dart';
 import 'package:notes/screen/helpScreen.dart';
 import 'package:notes/screen/homeScreen.dart';
-import 'package:notes/screen/drawerScreen.dart';
 import 'package:notes/screen/pinnedScreen.dart';
 import 'package:notes/screen/searchScreen.dart';
 import 'package:notes/screen/settings.dart';
@@ -24,14 +23,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      // initialRoute: "editNotesScreen",
       routes: {
-        "pinnedScreen": (context) => (pinnedScreen()),
+        "pinnedScreen": (context) => (const pinnedScreen()),
         "homeScreen": (context) => (homeScreen()),
-        "settingsScreen": (context) => (settingsScreen()),
-        "searchScreen": (context) => (searchScreen()),
-        "editNotesScreen": (context) => (editNotesScreen()),
-        "helpScreen": (context) => (helpScreen()),
-        "deletedScreen": (context) => (deletedScreen()),
+        "settingsScreen": (context) => (const settingsScreen()),
+        "searchScreen": (context) => (const searchScreen()),
+        "editNotesScreen": (context) => (const editNotesScreen()),
+        "helpScreen": (context) => (const helpScreen()),
+        "deletedScreen": (context) => (const deletedScreen()),
       },
       home: homeScreen(),
     );

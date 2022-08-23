@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -29,12 +27,12 @@ class homeScreen extends StatelessWidget {
                 },
                 child: topBarHomeScreen(context, drawerKey)),
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 70,
+                height: MediaQuery.of(context).size.height - 116,
                 child: GridView.builder(
                     shrinkWrap: true,
-                    itemCount: 15,
+                    itemCount: 50,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             mainAxisExtent: 100,
@@ -84,7 +82,9 @@ ButtonStyle homeScreenButtonStyle() {
 Container topBarHomeScreen(context, drawerKey) {
   return Container(
     margin: const EdgeInsets.all(10),
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    padding: const EdgeInsets.symmetric(
+      horizontal: 10,
+    ),
     width: MediaQuery.of(context).size.width,
     height: 50,
     decoration: BoxDecoration(
