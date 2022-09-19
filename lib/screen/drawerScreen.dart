@@ -55,7 +55,9 @@ Container drawerContainerDesign(context, val, icon, text, selectedVal, screen) {
     child: TextButton(
       onPressed: () {
         val != selectedVal
-            ? Navigator.pushNamed(context, screen)
+            ? selectedVal == 4 || selectedVal == 5
+                ? Navigator.pushNamed(context, screen)
+                : Navigator.popAndPushNamed(context, screen)
             : const SizedBox();
       },
       style: drawerScreenButtonStyle(selectedVal == val ? true : false),

@@ -6,24 +6,70 @@ import 'package:notes/screen/drawerScreen.dart';
 import 'package:notes/utils/colors.dart';
 
 class pinnedScreen extends StatelessWidget {
-  const pinnedScreen({Key? key}) : super(key: key);
+  pinnedScreen({Key? key}) : super(key: key);
+  GlobalKey<ScaffoldState> drawerKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: cardColor,
+    return SafeArea(
+      child: Scaffold(
+        key: drawerKey,
+        drawer: drawerScreen(selectedVal: 2),
+        body: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            color: bgColor,
+            child: Column(
+              children: [topBarPinnedScreen(context, drawerKey)],
+            )),
       ),
-      drawer: drawerScreen(selectedVal: 2),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        color: bgColor,
-        child: Text(
-          "Pinned",
-          style: TextStyle(color: white, fontSize: 30),
-        ),
+    );
+  }
+
+  Container topBarPinnedScreen(context, drawerKey) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      width: MediaQuery.of(context).size.width,
+      height: 60,
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
       ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              TextButton(
+                style: editScreenButtonStyle(),
+                onPressed: () {
+                  // save();
+                  // Navigator.pop(context);
+                  drawerKey.currentState!.openDrawer();
+                },
+                child: const Icon(
+                  Icons.menu,
+                  color: white,
+                ),
+              ),
+              const Text(
+                "Pinned Notes",
+                style: TextStyle(color: white, fontSize: 20),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  ButtonStyle editScreenButtonStyle() {
+    return ButtonStyle(
+      overlayColor:
+          MaterialStateColor.resolveWith((states) => white.withOpacity(0.1)),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50.0),
+      )),
     );
   }
 }

@@ -11,6 +11,13 @@ class DataBaseHelper {
   static const dbVersion = 1;
   static final tableName = ["NOTES"];
 
+  static String noteStringText = "noteString";
+  static String pinnedBool = "pinned";
+  static String deletedBool = "deleted";
+  static String lastModifyDInt = "lastModifyD";
+  static String lastModifyMInt = "lastModifyM";
+  static String lastModifyYInt = "lastModifyY";
+
   static Database? db;
   Future<Database> get get_database async => db ??= await initiateDB();
 
@@ -22,15 +29,14 @@ class DataBaseHelper {
 
   Future onCreateFun(Database db, int version) async {
     await db.execute('''
-CREATE TABLE ${tableName[1]}(
+CREATE TABLE ${tableName[0]}(
   id INTEGER PRIMARY KEY,
-
-  noteString TEXT;
-  pinned BIT;
-  deleted BIT;
-  lastModifyD INTEGER;
-  lastModifyM INTEGER;
-  lastModifyY INTEGER;
+  $noteStringText TEXT,
+  $pinnedBool INTEGER,
+  $deletedBool INTEGER,
+  $lastModifyDInt INTEGER,
+  $lastModifyMInt INTEGER,
+  $lastModifyYInt INTEGER);
   ''');
   }
 
@@ -42,18 +48,25 @@ CREATE TABLE ${tableName[1]}(
   Future<List<Map<String, dynamic>>> querryAll(
       List<String> columns, int table) async {
     Database db = await instance.get_database;
-    // (await db.query('sqlite_master', columns: ['type', 'name'])).forEach((row) {
-    //   print(row.values);
-    // });
-    if (columns.isEmpty) {
-      return await db.query(tableName[table]);
-    } else {}
-    return await db.query(tableName[table], columns: columns);
+
+    // if (columns.isEmpty) {
+    //   return await db.query(tableName[table]);
+    // } else {}
+    return await db.query(tableName[table],
+        columns: columns); //, where: "$deletedBool = ?", whereArgs: [0]
   }
 
   Future<List<Map<String, dynamic>>> querryID(int id, int table) async {
     Database db = await instance.get_database;
     return await db.query(tableName[table], where: " id = ?", whereArgs: [id]);
+  }
+
+  Future<List<Map<String, dynamic>>> querryCondition(
+      deleted, pinned, int table) async {
+    Database db = await instance.get_database;
+    return await db.query(tableName[table],
+        where: " $deletedBool = ? , $pinnedBool = ? ",
+        whereArgs: [deleted, pinned]);
   }
 
   Future<int> update(Map<String, dynamic> row, int table) async {

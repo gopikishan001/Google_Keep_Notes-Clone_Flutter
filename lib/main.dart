@@ -25,13 +25,13 @@ class MyApp extends StatelessWidget {
       ),
       // initialRoute: "editNotesScreen",
       routes: {
-        "pinnedScreen": (context) => (const pinnedScreen()),
+        "pinnedScreen": (context) => (pinnedScreen()),
         "homeScreen": (context) => (homeScreen()),
         "settingsScreen": (context) => (const settingsScreen()),
         "searchScreen": (context) => (const searchScreen()),
-        "editNotesScreen": (context) => (const editNotesScreen()),
+        "editNotesScreen": (context) => (editNotesScreen()),
         "helpScreen": (context) => (const helpScreen()),
-        "deletedScreen": (context) => (const deletedScreen()),
+        "deletedScreen": (context) => (deletedScreen()),
       },
       home: homeScreen(),
     );

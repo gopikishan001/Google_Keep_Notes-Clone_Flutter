@@ -2,55 +2,107 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:notes/model/notesModel.dart';
 import 'package:notes/screen/drawerScreen.dart';
 import 'package:notes/utils/colors.dart';
+import 'package:notes/utils/dataBaseHelper.dart';
+import 'package:sqflite/sqflite.dart';
 
-class homeScreen extends StatelessWidget {
+class homeScreen extends StatefulWidget {
   homeScreen({Key? key}) : super(key: key);
 
   static const List<String> dummyData = ["hey there i am ", "hey there i am "];
+
+  @override
+  State<homeScreen> createState() => _homeScreenState();
+}
+
+class _homeScreenState extends State<homeScreen> {
   GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+
+  Future<void> onrefresh() async {
+    setState(() {});
+    return Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<List<notesModel>> loadData() async {
+    List<Map<String, dynamic>> notesDB =
+        await DataBaseHelper.instance.querryAll([], 0);
+
+    return List.generate(notesDB.length, (index) {
+      return notesModel(
+        id: notesDB[index]["id"],
+        deleted: notesDB[index][DataBaseHelper.deletedBool],
+        pinned: notesDB[index][DataBaseHelper.pinnedBool],
+        noteString: notesDB[index][DataBaseHelper.noteStringText],
+        lastModifyD: notesDB[index][DataBaseHelper.lastModifyDInt],
+        lastModifyM: notesDB[index][DataBaseHelper.lastModifyMInt],
+        lastModifyY: notesDB[index][DataBaseHelper.lastModifyYInt],
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: drawerScreen(selectedVal: 1),
-      endDrawerEnableOpenDragGesture: true,
-      key: drawerKey,
-      backgroundColor: bgColor,
-      body: SafeArea(
-        child: Column(
+    return SafeArea(
+      child: Scaffold(
+        drawer: drawerScreen(selectedVal: 1),
+        endDrawerEnableOpenDragGesture: true,
+        key: drawerKey,
+        backgroundColor: bgColor,
+        body: Column(
           children: [
             GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, "searchScreen");
+                  // onrefresh();
                 },
                 child: topBarHomeScreen(context, drawerKey)),
-            Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 116,
-                child: GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: 50,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            mainAxisExtent: 100,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8),
-                    itemBuilder: (context, index) => notesViewItem("dummy")))
-
+            RefreshIndicator(
+              onRefresh: () {
+                return onrefresh();
+              },
+              child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height - 116,
+                  child: FutureBuilder(
+                      future: loadData(),
+                      builder: (BuildContext context,
+                              AsyncSnapshot<List> snapshot) =>
+                          snapshot.hasData
+                              ? snapshot.data!.isNotEmpty
+                                  ? GridView.builder(
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              mainAxisExtent: 100,
+                                              crossAxisCount: 2,
+                                              mainAxisSpacing: 8,
+                                              crossAxisSpacing: 8),
+                                      itemCount: snapshot.data!.length,
+                                      itemBuilder: (context, index) {
+                                        return notesViewItem(
+                                            snapshot.data![index]);
+                                      })
+                                  : const Padding(
+                                      padding: EdgeInsets.only(top: 20),
+                                      child: Text(
+                                        "No notes added",
+                                        style: TextStyle(color: white),
+                                      ),
+                                    )
+                              : const CircularProgressIndicator())),
+            )
             // const SizedBox(height: 15),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: cardColor,
+            onPressed: () {
+              Navigator.pushNamed(context, "editNotesScreen");
+            },
+            child: const Icon(Icons.create, color: Colors.white)),
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: cardColor,
-          onPressed: () {
-            Navigator.pushNamed(context, "editNotesScreen");
-          },
-          child: const Icon(Icons.create, color: Colors.white)),
     );
   }
 }
@@ -62,7 +114,7 @@ Container notesViewItem(data) {
         borderRadius: BorderRadius.circular(15),
         border: Border.all(width: 1, color: white.withOpacity(0.5))),
     child: Text(
-      data,
+      data.noteString,
       style: TextStyle(color: white),
     ),
   );
