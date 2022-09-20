@@ -44,16 +44,6 @@ class _editNotesScreenState extends State<editNotesScreen> {
     return WillPopScope(
       onWillPop: save(),
       child: Scaffold(
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //     icon: const Icon(Icons.arrow_back),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        //   backgroundColor: bgColor,
-        //   actions: const [Icon(Icons.pin_drop_outlined), SizedBox(width: 15)],
-        // ),
         body: SafeArea(
           child: Container(
               height: MediaQuery.of(context).size.height,
