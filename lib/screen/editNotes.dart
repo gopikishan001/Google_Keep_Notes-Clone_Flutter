@@ -9,17 +9,34 @@ import 'package:notes/utils/dataBaseHelper.dart';
 import 'drawerScreen.dart';
 
 class editNotesScreen extends StatefulWidget {
-  editNotesScreen({Key? key}) : super(key: key);
+  editNotesScreen({Key? key, required this.notesData}) : super(key: key);
 
+  late notesModel notesData;
   @override
   State<editNotesScreen> createState() => _editNotesScreenState();
 }
 
 class _editNotesScreenState extends State<editNotesScreen> {
+  late notesModel data;
+  void initState() {
+    super.initState();
+    data = widget.notesData;
+    if (data.id != 4004) {
+      editing = true;
+      textNoteController.text = data.noteString;
+      if (data.deleted == true) {
+        deleteNote = true;
+      }
+      if (data.pinned == true) {
+        pinNote = true;
+      }
+    }
+  }
+
   final textNoteController = TextEditingController();
 
+  bool editing = false;
   bool pinNote = false;
-
   bool deleteNote = false;
 
   @override
@@ -140,7 +157,7 @@ class _editNotesScreenState extends State<editNotesScreen> {
               TextButton(
                 style: editScreenButtonStyle(),
                 onPressed: () {
-                  save();
+                  // save();
                   Navigator.pop(context);
                 },
                 child: const Icon(
@@ -188,15 +205,29 @@ class _editNotesScreenState extends State<editNotesScreen> {
   }
 
   save() {
-    textNoteController.text != ""
-        ? DataBaseHelper.instance.insert({
-            DataBaseHelper.noteStringText: textNoteController.text,
-            DataBaseHelper.deletedBool: deleteNote ? 1 : 0,
-            DataBaseHelper.pinnedBool: pinNote ? 1 : 0,
-            DataBaseHelper.lastModifyDInt: DateTime.now().day,
-            DataBaseHelper.lastModifyMInt: DateTime.now().month,
-            DataBaseHelper.lastModifyYInt: DateTime.now().year,
-          }, 0)
-        : SizedBox();
+    if (editing == false) {
+      textNoteController.text != ""
+          ? DataBaseHelper.instance.insert({
+              DataBaseHelper.noteStringText: textNoteController.text,
+              DataBaseHelper.deletedBool: deleteNote ? 1 : 0,
+              DataBaseHelper.pinnedBool: pinNote ? 1 : 0,
+              DataBaseHelper.lastModifyDInt: DateTime.now().day,
+              DataBaseHelper.lastModifyMInt: DateTime.now().month,
+              DataBaseHelper.lastModifyYInt: DateTime.now().year,
+            }, 0)
+          : SizedBox();
+    } else {
+      textNoteController.text != ""
+          ? DataBaseHelper.instance.update({
+              "id": data.id,
+              DataBaseHelper.noteStringText: textNoteController.text,
+              DataBaseHelper.deletedBool: deleteNote ? 1 : 0,
+              DataBaseHelper.pinnedBool: pinNote ? 1 : 0,
+              DataBaseHelper.lastModifyDInt: DateTime.now().day,
+              DataBaseHelper.lastModifyMInt: DateTime.now().month,
+              DataBaseHelper.lastModifyYInt: DateTime.now().year,
+            }, 0)
+          : DataBaseHelper.instance.delete(data.id, 0);
+    }
   }
 }

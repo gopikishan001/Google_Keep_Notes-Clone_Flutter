@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notes/model/notesModel.dart';
 import 'package:notes/screen/drawerScreen.dart';
+import 'package:notes/screen/editNotes.dart';
 import 'package:notes/utils/colors.dart';
 import 'package:notes/utils/dataBaseHelper.dart';
 import 'package:sqflite/sqflite.dart';
@@ -11,14 +12,13 @@ import 'package:sqflite/sqflite.dart';
 class homeScreen extends StatefulWidget {
   homeScreen({Key? key}) : super(key: key);
 
-  static const List<String> dummyData = ["hey there i am ", "hey there i am "];
-
   @override
   State<homeScreen> createState() => _homeScreenState();
 }
 
 class _homeScreenState extends State<homeScreen> {
   GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+  bool selecting = false;
 
   Future<void> onrefresh() async {
     setState(() {});
@@ -72,18 +72,7 @@ class _homeScreenState extends State<homeScreen> {
                               AsyncSnapshot<List> snapshot) =>
                           snapshot.hasData
                               ? snapshot.data!.isNotEmpty
-                                  ? GridView.builder(
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                              mainAxisExtent: 100,
-                                              crossAxisCount: 2,
-                                              mainAxisSpacing: 8,
-                                              crossAxisSpacing: 8),
-                                      itemCount: snapshot.data!.length,
-                                      itemBuilder: (context, index) {
-                                        return notesViewItem(
-                                            snapshot.data![index]);
-                                      })
+                                  ? viewBuilder(snapshot)
                                   : const Padding(
                                       padding: EdgeInsets.only(top: 20),
                                       child: Text(
@@ -107,17 +96,17 @@ class _homeScreenState extends State<homeScreen> {
   }
 }
 
-Container notesViewItem(data) {
-  return Container(
-    padding: EdgeInsets.all(8),
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(width: 1, color: white.withOpacity(0.5))),
-    child: Text(
-      data.noteString,
-      style: TextStyle(color: white),
-    ),
-  );
+Widget viewBuilder(snapshot) {
+  return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisExtent: 100,
+          crossAxisCount: 2,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8),
+      itemCount: snapshot.data!.length,
+      itemBuilder: (context, index) {
+        return notesViewItem(snapshot.data![index]);
+      });
 }
 
 ButtonStyle homeScreenButtonStyle() {
@@ -128,6 +117,25 @@ ButtonStyle homeScreenButtonStyle() {
         RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(50.0),
     )),
+  );
+}
+
+Widget notesViewItem(data) {
+  return InkWell(
+    onLongPress: () {},
+    onTap: (() {
+      editNotesScreen(notesData: data);
+    }),
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(width: 1, color: white.withOpacity(0.5))),
+      child: Text(
+        data.noteString,
+        style: const TextStyle(color: white),
+      ),
+    ),
   );
 }
 

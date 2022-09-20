@@ -7,6 +7,8 @@ import 'package:notes/screen/pinnedScreen.dart';
 import 'package:notes/screen/searchScreen.dart';
 import 'package:notes/screen/settings.dart';
 
+import 'model/notesModel.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -29,7 +31,9 @@ class MyApp extends StatelessWidget {
         "homeScreen": (context) => (homeScreen()),
         "settingsScreen": (context) => (const settingsScreen()),
         "searchScreen": (context) => (const searchScreen()),
-        "editNotesScreen": (context) => (editNotesScreen()),
+        "editNotesScreen": (context) => (editNotesScreen(
+              notesData: notesModel(),
+            )),
         "helpScreen": (context) => (const helpScreen()),
         "deletedScreen": (context) => (deletedScreen()),
       },
