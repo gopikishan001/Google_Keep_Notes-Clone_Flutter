@@ -29,12 +29,12 @@ class MyApp extends StatelessWidget {
       routes: {
         "pinnedScreen": (context) => (pinnedScreen()),
         "homeScreen": (context) => (homeScreen()),
-        "settingsScreen": (context) => (const settingsScreen()),
+        "settingsScreen": (context) => (settingsScreen()),
         "searchScreen": (context) => (const searchScreen()),
         "editNotesScreen": (context) => (editNotesScreen(
               notesData: notesModel(),
             )),
-        "helpScreen": (context) => (const helpScreen()),
+        "helpScreen": (context) => (helpScreen()),
         "deletedScreen": (context) => (deletedScreen()),
       },
       home: homeScreen(),

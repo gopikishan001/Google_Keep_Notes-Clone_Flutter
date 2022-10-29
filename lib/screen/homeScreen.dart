@@ -20,29 +20,36 @@ class _homeScreenState extends State<homeScreen> {
   GlobalKey<ScaffoldState> drawerKey = GlobalKey();
   bool selecting = false;
   List selectedList = [];
+  List<notesModel> listData = [];
 
   bool gridView = true;
 
   Future<void> onrefresh() async {
     setState(() {});
-    return Future.delayed(const Duration(seconds: 1));
+    return Future.delayed(const Duration(milliseconds: 700));
   }
 
   Future<List<notesModel>> loadData() async {
     List<Map<String, dynamic>> notesDB =
         await DataBaseHelper.instance.querryAll([], 0);
 
-    return List.generate(notesDB.length, (index) {
-      return notesModel(
-        id: notesDB[index]["id"],
-        deleted: notesDB[index][DataBaseHelper.deletedBool],
-        pinned: notesDB[index][DataBaseHelper.pinnedBool],
-        noteString: notesDB[index][DataBaseHelper.noteStringText],
-        lastModifyD: notesDB[index][DataBaseHelper.lastModifyDInt],
-        lastModifyM: notesDB[index][DataBaseHelper.lastModifyMInt],
-        lastModifyY: notesDB[index][DataBaseHelper.lastModifyYInt],
-      );
-    });
+    listData.clear();
+    for (int index = 0; index < notesDB.length; index++) {
+      if (notesDB[index][DataBaseHelper.deletedBool] != 1) {
+        listData.add(notesModel(
+          id: notesDB[index]["id"],
+          deleted: notesDB[index][DataBaseHelper.deletedBool],
+          pinned: notesDB[index][DataBaseHelper.pinnedBool],
+          noteString: notesDB[index][DataBaseHelper.noteStringText],
+          lastModifyD: notesDB[index][DataBaseHelper.lastModifyDInt],
+          lastModifyM: notesDB[index][DataBaseHelper.lastModifyMInt],
+          lastModifyY: notesDB[index][DataBaseHelper.lastModifyYInt],
+          lastModifyTH: notesDB[index][DataBaseHelper.lastModifyTHInt],
+          lastModifyTM: notesDB[index][DataBaseHelper.lastModifyTMInt],
+        ));
+      }
+    }
+    return listData;
   }
 
   @override
@@ -84,7 +91,10 @@ class _homeScreenState extends State<homeScreen> {
                                           style: TextStyle(color: white),
                                         ),
                                       )
-                                : const CircularProgressIndicator())),
+                                : const Center(
+                                    child: CircularProgressIndicator(
+                                    color: white,
+                                  )))),
               )
               // const SizedBox(height: 15),
             ],
@@ -215,7 +225,18 @@ class _homeScreenState extends State<homeScreen> {
                   children: [
                     TextButton(
                       style: homeScreenButtonStyle(),
-                      onPressed: () {},
+                      onPressed: () {
+                        for (int i = 0; i < selectedList.length; i++) {
+                          DataBaseHelper.instance.update({
+                            "id": selectedList[i],
+                            DataBaseHelper.pinnedBool: 1,
+                          }, 0);
+                          // DataBaseHelper.instance.delete(selectedList[i], 0);
+                        }
+                        selectedList.clear();
+                        selecting = false;
+                        setState(() {});
+                      },
                       child: const Icon(
                         Icons.pin_drop_outlined,
                         color: white,
@@ -225,7 +246,11 @@ class _homeScreenState extends State<homeScreen> {
                         style: homeScreenButtonStyle(),
                         onPressed: () {
                           for (int i = 0; i < selectedList.length; i++) {
-                            DataBaseHelper.instance.delete(selectedList[i], 0);
+                            DataBaseHelper.instance.update({
+                              "id": selectedList[i],
+                              DataBaseHelper.deletedBool: 1,
+                            }, 0);
+                            // DataBaseHelper.instance.delete(selectedList[i], 0);
                           }
                           selectedList.clear();
                           selecting = false;

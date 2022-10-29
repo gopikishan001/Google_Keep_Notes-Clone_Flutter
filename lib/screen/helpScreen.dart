@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:notes/model/notesModel.dart';
 import 'package:notes/utils/colors.dart';
 
 import 'drawerScreen.dart';
 
 class helpScreen extends StatelessWidget {
-  const helpScreen({Key? key}) : super(key: key);
+  helpScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

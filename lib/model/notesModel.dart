@@ -6,6 +6,8 @@ class notesModel {
   int lastModifyD;
   int lastModifyM;
   int lastModifyY;
+  int lastModifyTH;
+  int lastModifyTM;
 
   // notesModel(
   //     {id,
@@ -26,11 +28,13 @@ class notesModel {
 
   notesModel({
     this.id = 4004,
-    this.noteString = "noteString",
+    this.noteString = "newNoteString",
     this.pinned = 0,
     this.deleted = 0,
     this.lastModifyD = 0,
     this.lastModifyM = 0,
     this.lastModifyY = 0,
+    this.lastModifyTH = 0,
+    this.lastModifyTM = 0,
   });
 }

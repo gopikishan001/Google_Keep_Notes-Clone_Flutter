@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:notes/model/notesModel.dart';
 import 'package:notes/screen/drawerScreen.dart';
 import 'package:notes/utils/colors.dart';
 
 class settingsScreen extends StatelessWidget {
-  const settingsScreen({Key? key}) : super(key: key);
+  settingsScreen({Key? key}) : super(key: key);
+  late List<notesModel> notesData;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,10 @@ class settingsScreen extends StatelessWidget {
           child: Column(
             children: [
               topBarSettingsScreen(context),
+              const Text(
+                "Settings   ",
+                style: TextStyle(color: white),
+              )
             ],
           ),
         ),
@@ -62,7 +68,9 @@ class settingsScreen extends StatelessWidget {
             children: [
               TextButton(
                 style: editScreenButtonStyle(),
-                onPressed: () {},
+                onPressed: () {
+                  print("clicked");
+                },
                 child: const CircleAvatar(
                   backgroundColor: white,
                 ),

@@ -1,12 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:notes/model/notesModel.dart';
 import 'package:notes/utils/colors.dart';
 import 'package:notes/utils/dataBaseHelper.dart';
-
-import 'drawerScreen.dart';
 
 class editNotesScreen extends StatefulWidget {
   editNotesScreen({Key? key, required this.notesData}) : super(key: key);
@@ -17,7 +12,22 @@ class editNotesScreen extends StatefulWidget {
 }
 
 class _editNotesScreenState extends State<editNotesScreen> {
+  List<String> monthStr = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
   late notesModel data;
+  bool keyboardON = false;
   void initState() {
     super.initState();
     data = widget.notesData;
@@ -108,7 +118,7 @@ class _editNotesScreenState extends State<editNotesScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Last edited",
+                lastModifiedPrint(),
                 style: TextStyle(color: white.withOpacity(0.7)),
               ),
             ],
@@ -164,6 +174,7 @@ class _editNotesScreenState extends State<editNotesScreen> {
                 style: editScreenButtonStyle(),
                 onPressed: () {
                   pinNote = !pinNote;
+
                   setState(() {});
                 },
                 child: pinNote
@@ -195,6 +206,7 @@ class _editNotesScreenState extends State<editNotesScreen> {
   }
 
   save() {
+    // if (MediaQuery.of(context).viewInsets.bottom == 0)
     if (editing == false) {
       textNoteController.text != ""
           ? DataBaseHelper.instance.insert({
@@ -204,6 +216,8 @@ class _editNotesScreenState extends State<editNotesScreen> {
               DataBaseHelper.lastModifyDInt: DateTime.now().day,
               DataBaseHelper.lastModifyMInt: DateTime.now().month,
               DataBaseHelper.lastModifyYInt: DateTime.now().year,
+              DataBaseHelper.lastModifyTHInt: DateTime.now().hour,
+              DataBaseHelper.lastModifyTMInt: DateTime.now().minute,
             }, 0)
           : SizedBox();
     } else {
@@ -216,8 +230,31 @@ class _editNotesScreenState extends State<editNotesScreen> {
               DataBaseHelper.lastModifyDInt: DateTime.now().day,
               DataBaseHelper.lastModifyMInt: DateTime.now().month,
               DataBaseHelper.lastModifyYInt: DateTime.now().year,
+              DataBaseHelper.lastModifyTHInt: DateTime.now().hour,
+              DataBaseHelper.lastModifyTMInt: DateTime.now().minute,
             }, 0)
           : DataBaseHelper.instance.delete(data.id, 0);
     }
+  }
+
+  lastModifiedPrint() {
+    if (data.id != 4004) {
+      if (data.lastModifyD == DateTime.now().day &&
+          data.lastModifyM == DateTime.now().month &&
+          data.lastModifyY == DateTime.now().year) {
+        return "Edited " +
+            data.lastModifyTH.toString() +
+            ":" +
+            data.lastModifyTM.toString();
+      } else {
+        return "Edited " +
+            data.lastModifyD.toString() +
+            monthStr[data.lastModifyM - 1];
+      }
+    } else
+      return "Edited " +
+          DateTime.now().hour.toString() +
+          ":" +
+          DateTime.now().minute.toString();
   }
 }

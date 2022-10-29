@@ -17,6 +17,8 @@ class DataBaseHelper {
   static String lastModifyDInt = "lastModifyD";
   static String lastModifyMInt = "lastModifyM";
   static String lastModifyYInt = "lastModifyY";
+  static String lastModifyTHInt = "lastModifyTH";
+  static String lastModifyTMInt = "lastModifyTM";
 
   static Database? db;
   Future<Database> get get_database async => db ??= await initiateDB();
@@ -36,7 +38,10 @@ CREATE TABLE ${tableName[0]}(
   $deletedBool INTEGER,
   $lastModifyDInt INTEGER,
   $lastModifyMInt INTEGER,
-  $lastModifyYInt INTEGER);
+  $lastModifyYInt INTEGER,
+  $lastModifyTHInt INTEGER,
+  $lastModifyTMInt INTEGER
+  );
   ''');
   }
 
